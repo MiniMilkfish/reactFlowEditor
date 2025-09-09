@@ -1,8 +1,8 @@
-import React, { forwardRef, type HTMLAttributes } from "react";
+import { forwardRef, type HTMLAttributes } from "react";
 import { type HandleProps } from "@xyflow/react";
 
-import { cn } from "@/lib/utils";
-import { BaseHandle } from "@/components/base-handle";
+import { cn } from "../lib/utils";
+import { BaseHandle } from "../components/base-handle";
 
 const flexDirections = {
   top: "flex-col",

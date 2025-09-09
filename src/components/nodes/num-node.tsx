@@ -12,18 +12,18 @@ import {
   BaseNodeFooter,
   BaseNodeHeader,
   BaseNodeHeaderTitle,
-} from "@/components/base-node";
-import { LabeledHandle } from "@/components/labeled-handle";
+} from "../../components/base-node";
+import { LabeledHandle } from "../../components/labeled-handle";
 
 import { EllipsisVertical } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../../components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "../../components/ui/dropdown-menu";
 
 export type NumNode = Node<{
   value: number;
