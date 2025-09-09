@@ -1,15 +1,17 @@
-import {
-  // React,
-  useCallback,
-} from "react";
+import { useCallback, useState, type ChangeEventHandler } from "react";
 import {
   ReactFlow,
   type Node,
   type Edge,
   type OnConnect,
+  type ColorMode,
   addEdge,
   useNodesState,
   useEdgesState,
+  MiniMap,
+  Controls,
+  Background,
+  Panel,
 } from "@xyflow/react";
 
 import { NumNode } from "./components/nodes/num-node";
@@ -72,6 +74,7 @@ const initialEdges: Edge[] = [
 ];
 
 function Flow() {
+  const [colorMode, setColorMode] = useState<ColorMode>("light");
   const [nodes, , onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
@@ -84,8 +87,12 @@ function Flow() {
     [setEdges],
   );
 
+  const onChange: ChangeEventHandler<HTMLSelectElement> = (evt) => {
+    setColorMode(evt.target.value as ColorMode);
+  };
+
   return (
-    <div className="h-screen w-screen rounded-xl bg-gray-50 p-8">
+    <div className="h-screen w-screen rounded-xl bg-gray-50">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -94,8 +101,24 @@ function Flow() {
         onConnect={onConnect}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
+        colorMode={colorMode}
         fitView
-      />
+      >
+        <MiniMap />
+        <Controls />
+        <Background />
+        <Panel position="top-right">
+          <select
+            className="xy-theme__select"
+            onChange={onChange}
+            data-testid="colormode-select"
+          >
+            <option value="light">light</option>
+            <option value="dark">dark</option>
+            <option value="system">system</option>
+          </select>
+        </Panel>
+      </ReactFlow>
     </div>
   );
 }
