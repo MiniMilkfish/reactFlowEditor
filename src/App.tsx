@@ -1,18 +1,57 @@
-// import { useCallback, useState } from 'react'
-import '@xyflow/react/dist/style.css';
-import { BaseNode, BaseNodeContent, BaseNodeHeader, BaseNodeHeaderTitle } from '@/components/base-node';
+import React from "react";
+import { ReactFlow, type Node, Position, useNodesState } from "@xyflow/react";
 
-function App() {
-  return <div className="w-screen h-screen p-8">
-    <BaseNode>
-      <BaseNodeHeader>
-        <BaseNodeHeaderTitle>Base Node</BaseNodeHeaderTitle>
-      </BaseNodeHeader>
-      <BaseNodeContent>
-        This is a bse node component that can be used to build other nodes.
-      </BaseNodeContent>
-    </BaseNode>
-  </div>
+import "@xyflow/react/dist/style.css";
+
+import {
+  NodeTooltip,
+  NodeTooltipContent,
+  NodeTooltipTrigger,
+} from "./components/node-tooltip";
+import { BaseNode, BaseNodeContent } from "./components/base-node";
+
+function Tooltip() {
+  return (
+    <NodeTooltip>
+      <NodeTooltipContent position={Position.Top}>
+        Hidden Content
+      </NodeTooltipContent>
+      <BaseNode>
+        <BaseNodeContent>
+          <NodeTooltipTrigger>Hover</NodeTooltipTrigger>
+        </BaseNodeContent>
+      </BaseNode>
+    </NodeTooltip>
+  );
 }
 
-export default App
+const nodeTypes = {
+  tooltip: Tooltip,
+};
+
+const initialNodes: Node[] = [
+  {
+    id: "1",
+    position: { x: 0, y: 0 },
+    data: {},
+    type: "tooltip",
+  },
+];
+
+function Flow() {
+  const [nodes, , onNodesChange] = useNodesState(initialNodes);
+
+  return (
+    <div className="h-screen w-screen rounded-xl bg-gray-50 p-8">
+      <ReactFlow
+        nodes={nodes}
+        nodeTypes={nodeTypes}
+        onNodesChange={onNodesChange}
+        fitView
+      />
+    </div>
+  );
+}
+export default function App() {
+  return <Flow />;
+}

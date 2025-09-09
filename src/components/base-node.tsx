@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { forwardRef, type HTMLAttributes } from "react";
+import { forwardRef, HTMLAttributes } from "react";
 
 export const BaseNode = forwardRef<
   HTMLDivElement,
@@ -8,10 +8,10 @@ export const BaseNode = forwardRef<
   <div
     ref={ref}
     className={cn(
-      "relative rounded-md border bg-card text-card-foreground",
+      "bg-card text-card-foreground relative rounded-md border",
       "hover:ring-1",
       // React Flow displays node elements inside of a `NodeWrapper` component,
-      // which compiles down to a div with the class `react-flow__node`.
+      // which compiles down to a div with a the class `react-flow__node`.
       // When a node is selected, the class `selected` is added to the
       // `react-flow__node` element. This allows us to style the node when it
       // is selected, using Tailwind's `&` selector.
@@ -26,7 +26,9 @@ export const BaseNode = forwardRef<
 BaseNode.displayName = "BaseNode";
 
 /**
+ 
  * A container for a consistent header layout intended to be used inside the
+ 
  * `<BaseNode />` component.
  */
 export const BaseNodeHeader = forwardRef<
@@ -47,7 +49,9 @@ export const BaseNodeHeader = forwardRef<
 BaseNodeHeader.displayName = "BaseNodeHeader";
 
 /**
+ 
  * The title text for the node. To maintain a native application feel, the title
+ 
  * text is not selectable.
  */
 export const BaseNodeHeaderTitle = forwardRef<
