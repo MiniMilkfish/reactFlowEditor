@@ -1,79 +1,75 @@
+import React, { useCallback } from "react";
 import {
   ReactFlow,
-  Controls,
+  addEdge,
   MiniMap,
+  Controls,
   Background,
-  BackgroundVariant,
-  PanOnScrollMode,
+  useNodesState,
+  useEdgesState,
 } from "@xyflow/react";
-import "@xyflow/react/dist/style.css";
-import "./overview.less";
-import { useShallow } from "zustand/react/shallow";
-import type { AppState } from "./types";
-import useStore from "./store";
+import type { Node } from "@xyflow/react";
 
-// 自定义节点
+import {
+  nodes as initialNodes,
+  edges as initialEdges,
+} from "./initial-elements";
 import AnnotationNode from "./AnnotationNode";
 import ResizerNode from "./ResizerNode";
 import CircleNode from "./CircleNode";
 import TextNode from "./TextNode";
 import ButtonEdge from "./ButtonEdge";
-import ToolbarNode from "./ToolBarNode";
+import ToolBarNode from "./ToolBarNode";
+
+import "@xyflow/react/dist/style.css";
+import "./overview.less";
 
 const nodeTypes = {
-  annotationNode: AnnotationNode,
-  toolbarNode: ToolbarNode,
-  resizerNode: ResizerNode,
-  circleNode: CircleNode,
-  textNode: TextNode,
+  annotation: AnnotationNode,
+  tools: ToolBarNode,
+  resizer: ResizerNode,
+  circle: CircleNode,
+  textinput: TextNode,
 };
 
 const edgeTypes = {
-  buttonEdge: ButtonEdge,
+  button: ButtonEdge,
 };
 
 const nodeClassName = (node: any) => node.type;
 
-const selector = (state: AppState) => ({
-  nodes: state.nodes,
-  edges: state.edges,
-  onNodesChange: state.onNodesChange,
-  onEdgesChange: state.onEdgesChange,
-  onConnect: state.onConnect,
-  setNodes: state.setNodes,
-  setEdges: state.setEdges,
-});
+const OverviewFlow = () => {
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-function Flow() {
-  const { nodes, edges, onNodesChange, onEdgesChange, onConnect } = useStore(
-    useShallow(selector),
+  const onConnect = useCallback(
+    (params: any) => setEdges((eds) => addEdge(params, eds)),
+    [],
   );
 
   return (
-    <div className="h-screen w-screen rounded-xl bg-gray-50">
+    <div style={{ height: "800px" }}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        fitView
+        attributionPosition="top-right"
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         className="overview"
-        panOnScrollMode={PanOnScrollMode.Horizontal}
-        panOnScroll={true}
-        fitView
-        attributionPosition="top-right"
       >
-        <Controls />
         <MiniMap zoomable pannable nodeClassName={nodeClassName} />
-        <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
+        <Controls />
+        <Background />
       </ReactFlow>
     </div>
   );
-}
+};
 
 export type AppNode = Node;
 export default function App() {
-  return <Flow />;
+  return <OverviewFlow />;
 }

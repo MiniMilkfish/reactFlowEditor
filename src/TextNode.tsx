@@ -1,7 +1,7 @@
-import { memo } from "react";
+import React, { memo } from "react";
 import { Handle, Position, NodeResizer } from "@xyflow/react";
 
-function ResizerNode({ data }: { data: { label: String } }) {
+function ResizerNode({ data }: { data: { label: string } }) {
   return (
     <>
       <NodeResizer minWidth={50} minHeight={50} />

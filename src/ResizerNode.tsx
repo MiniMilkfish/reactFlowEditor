@@ -1,5 +1,5 @@
-import { Handle, NodeResizer, Position } from "@xyflow/react";
-import { memo } from "react";
+import React, { memo } from "react";
+import { Handle, Position, NodeResizer } from "@xyflow/react";
 
 function ResizerNode({ data }: { data: { label: string } }) {
   return (
@@ -10,36 +10,26 @@ function ResizerNode({ data }: { data: { label: string } }) {
       <div
         style={{
           display: "flex",
-          justifyContent: "space-evenly",
           position: "absolute",
           bottom: 0,
           width: "100%",
+          justifyContent: "space-evenly",
           left: 0,
         }}
       >
         <Handle
+          style={{ position: "relative", left: 0, transform: "none" }}
           id="a"
           type="source"
           position={Position.Bottom}
-          style={{
-            position: "relative",
-            left: 0,
-            transform: "none",
-          }}
         />
         <Handle
+          style={{ position: "relative", left: 0, transform: "none" }}
           id="b"
           type="source"
           position={Position.Bottom}
-          style={{
-            position: "relative",
-            left: 0,
-            transform: "none",
-          }}
         />
       </div>
-
-      <Handle type="source" position={Position.Right} />
     </>
   );
 }

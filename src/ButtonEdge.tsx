@@ -1,10 +1,12 @@
+import React from "react";
 import {
   BaseEdge,
   EdgeLabelRenderer,
   getBezierPath,
   useReactFlow,
-  type EdgeProps,
 } from "@xyflow/react";
+
+import type { EdgeProps } from "@xyflow/react";
 
 export default function ButtonEdge({
   id,
@@ -32,7 +34,7 @@ export default function ButtonEdge({
   };
 
   return (
-    <div>
+    <>
       <BaseEdge path={edgePath} markerEnd={markerEnd} style={style} />
       <EdgeLabelRenderer>
         <div
@@ -51,6 +53,6 @@ export default function ButtonEdge({
           </button>
         </div>
       </EdgeLabelRenderer>
-    </div>
+    </>
   );
 }

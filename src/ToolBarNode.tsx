@@ -1,5 +1,5 @@
-import { Handle, NodeToolbar, Position } from "@xyflow/react";
-import { memo, useState } from "react";
+import React, { memo, useState } from "react";
+import { Handle, Position, NodeToolbar } from "@xyflow/react";
 
 function ToolbarNode({ data }: { data: { label: string } }) {
   const [emoji, setEmoji] = useState(() => "🚀");
@@ -20,7 +20,7 @@ function ToolbarNode({ data }: { data: { label: string } }) {
       <div
         style={{
           position: "absolute",
-          color: "#555",
+          color: "#555555",
           bottom: -15,
           fontSize: 8,
         }}
