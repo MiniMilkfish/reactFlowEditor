@@ -7,12 +7,32 @@ import {
   PanOnScrollMode,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
+import "./overview.less";
 import { useShallow } from "zustand/react/shallow";
 import type { AppState } from "./types";
 import useStore from "./store";
 
-// 引入自定义节点
-import ColorChooserNode from "./ColorChooseNode";
+// 自定义节点
+import AnnotationNode from "./AnnotationNode";
+import ResizerNode from "./ResizerNode";
+import CircleNode from "./CircleNode";
+import TextNode from "./TextNode";
+import ButtonEdge from "./ButtonEdge";
+import ToolbarNode from "./ToolBarNode";
+
+const nodeTypes = {
+  annotationNode: AnnotationNode,
+  toolbarNode: ToolbarNode,
+  resizerNode: ResizerNode,
+  circleNode: CircleNode,
+  textNode: TextNode,
+};
+
+const edgeTypes = {
+  buttonEdge: ButtonEdge,
+};
+
+const nodeClassName = (node: any) => node.type;
 
 const selector = (state: AppState) => ({
   nodes: state.nodes,
@@ -23,10 +43,6 @@ const selector = (state: AppState) => ({
   setNodes: state.setNodes,
   setEdges: state.setEdges,
 });
-
-const nodeTypes = {
-  colorChooser: ColorChooserNode,
-};
 
 function Flow() {
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect } = useStore(
@@ -42,12 +58,15 @@ function Flow() {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
+        className="overview"
         panOnScrollMode={PanOnScrollMode.Horizontal}
         panOnScroll={true}
         fitView
+        attributionPosition="top-right"
       >
         <Controls />
-        <MiniMap />
+        <MiniMap zoomable pannable nodeClassName={nodeClassName} />
         <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
       </ReactFlow>
     </div>
