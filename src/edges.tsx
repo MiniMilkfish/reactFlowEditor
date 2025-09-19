@@ -1,4 +1,4 @@
-import type { Edge } from "@xyflow/react";
+import type { AppEdge } from "./types";
 
 export default [
   {
@@ -19,4 +19,4 @@ export default [
     },
     type: "smoothstep",
   },
-] as Edge[];
+] as AppEdge[];

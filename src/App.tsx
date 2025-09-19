@@ -11,6 +11,9 @@ import { useShallow } from "zustand/react/shallow";
 import type { AppState } from "./types";
 import useStore from "./store";
 
+// 引入自定义节点
+import ColorChooserNode from "./ColorChooseNode";
+
 const selector = (state: AppState) => ({
   nodes: state.nodes,
   edges: state.edges,
@@ -20,6 +23,10 @@ const selector = (state: AppState) => ({
   setNodes: state.setNodes,
   setEdges: state.setEdges,
 });
+
+const nodeTypes = {
+  colorChooser: ColorChooserNode,
+};
 
 function Flow() {
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect } = useStore(
@@ -34,6 +41,7 @@ function Flow() {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        nodeTypes={nodeTypes}
         panOnScrollMode={PanOnScrollMode.Horizontal}
         panOnScroll={true}
         fitView

@@ -1,27 +1,28 @@
-import type { Node } from "@xyflow/react";
+import type { AppNode } from "./types";
 
 export default [
   {
     id: "1",
-    type: "input",
+    type: "colorChooser",
     position: { x: 250, y: 25 },
     data: {
-      label: "Input",
+      color: "#000000",
     },
   },
   {
     id: "2",
+    type: "colorChooser",
     position: { x: 100, y: 125 },
     data: {
-      label: "Default",
+      color: "#000000",
     },
   },
   {
     id: "3",
-    type: "output",
+    type: "colorChooser",
     position: { x: 250, y: 250 },
     data: {
-      label: "Output",
+      color: "#000000",
     },
   },
-] as Node[];
+] as AppNode[];

@@ -1,8 +1,13 @@
 import { create } from "zustand";
+import { applyNodeChanges, applyEdgeChanges, addEdge } from "@xyflow/react";
+import type { AppState, AppNode, ColorNode } from "./types";
+
 import initialNodes from "./nodes";
 import initialEdges from "./edges";
-import { applyNodeChanges, applyEdgeChanges, addEdge } from "@xyflow/react";
-import type { AppState } from "./types";
+
+function isColorChooserNode(node: AppNode): node is ColorNode {
+  return node.type === "colorChooser";
+}
 
 const useStore = create<AppState>((set, get) => ({
   nodes: initialNodes,
@@ -27,6 +32,16 @@ const useStore = create<AppState>((set, get) => ({
   },
   setEdges: (edges: any) => {
     set({ edges });
+  },
+  updateNodeColor: (nodeId: string, color: string) => {
+    set({
+      nodes: get().nodes.map((node) => {
+        if (node.id === nodeId && isColorChooserNode(node)) {
+          return { ...node, data: { ...node.data, color } };
+        }
+        return node;
+      }),
+    });
   },
 }));
 
