@@ -1,0 +1,1 @@
+import { Handle } from "@xyflow/react"; // 自定义节点示例：顶部和底部各一个连接点  const CustomNode = ({ data }) => (    <div style={{ width: 150, height: 60, background: '#e6f7ff', borderRadius: 6, padding: 10 }}>      <Handle type="target" position="top" /> {/* 顶部目标句柄（接收连接） */}      <div>{data.label}</div>      <Handle type="source" position="bottom" /> {/* 底部源句柄（发起连接） */}    </div>  );
