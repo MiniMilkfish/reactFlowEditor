@@ -24,4 +24,4 @@ export interface AppState {
  * 颜色选择器节点的数据类型为{color: string}
  * 颜色选择器节点的type为'colorChooser'
  */
-export type ColorNode = Node<{ color: string }, "colorChooser">;
+export type ColorNode = Node<{ color: string; txt?: string }, "colorChooser">;

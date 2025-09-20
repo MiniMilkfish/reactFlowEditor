@@ -17,7 +17,7 @@ export default [
   {
     id: "3",
     type: "colorChooser",
-    data: { color: "#B794F4" },
+    data: { color: "#B794F4", txt: "好耶！" },
     position: { x: 250, y: 250 },
   },
 ] as AppNode[];

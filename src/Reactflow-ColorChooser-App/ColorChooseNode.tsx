@@ -5,6 +5,7 @@ import type { ColorNode } from "./types";
 
 function ColorChooserNode({ id, data }: NodeProps<ColorNode>) {
   const updateNodeColor = userStore((state) => state.updateNodeColor);
+  console.log("ColorChooserNode", id, data);
 
   return (
     <div style={{ backgroundColor: data.color, borderRadius: 10 }}>
@@ -16,6 +17,7 @@ function ColorChooserNode({ id, data }: NodeProps<ColorNode>) {
           onChange={(e) => updateNodeColor(id, e.target.value)}
           className="nodrag"
         />
+        {data.txt && <div>{data.txt}</div>}
       </div>
       <Handle type="source" position={Position.Bottom} />
     </div>
