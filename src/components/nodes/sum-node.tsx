@@ -1,3 +1,4 @@
+// Language: TypeScript JSX
 import {
   type Node,
   type NodeProps,
