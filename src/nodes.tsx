@@ -78,7 +78,7 @@ export default [
   {
     id: "2-3",
     type: "resizer",
-    data: { Label: "resizable node" },
+    data: { Label: "resizable node", txt: "a" },
     position: { x: 250, y: 50 },
     style: {
       width: 80,
@@ -108,13 +108,18 @@ export default [
   {
     id: "3-2",
     type: "textinput",
-    data: {},
     position: { x: 150, y: 650 },
+    data: {
+      label: "aaaa",
+    },
   },
   {
     id: "3-1",
     type: "circle",
     position: { x: 350, y: 500 },
-    data: {},
+    data: {
+      txt: "1",
+    },
+    a: "2",
   },
 ] as AppNode[];

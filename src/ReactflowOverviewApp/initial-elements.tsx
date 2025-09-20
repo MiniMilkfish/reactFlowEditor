@@ -85,7 +85,7 @@ export const nodes = [
       background: "rgb(208, 192, 247)",
     },
     parentId: "2-1",
-    extent: "parent",
+    // extent: "parent",
   },
   {
     id: "2-3",
@@ -140,6 +140,9 @@ export const edges = [
     target: "1-2",
     label: "edge",
     type: "smoothstep",
+    markerEnd: {
+      type: MarkerType.ArrowClosed,
+    },
   },
   {
     id: "e1-3",
@@ -147,6 +150,9 @@ export const edges = [
     target: "1-3",
     animated: true,
     label: "animated edge",
+    markerEnd: {
+      type: MarkerType.ArrowClosed,
+    },
   },
   {
     id: "e2-2",

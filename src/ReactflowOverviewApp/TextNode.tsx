@@ -1,7 +1,8 @@
 import React, { memo } from "react";
 import { Handle, Position, NodeResizer } from "@xyflow/react";
 
-function ResizerNode({ data }: { data: { label: string } }) {
+function TextNode({ data }: { data: { label: string } }) {
+  console.log("TextNode", data);
   return (
     <>
       <NodeResizer minWidth={50} minHeight={50} />
@@ -34,4 +35,4 @@ function ResizerNode({ data }: { data: { label: string } }) {
   );
 }
 
-export default memo(ResizerNode);
+export default memo(TextNode);

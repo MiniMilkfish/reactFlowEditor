@@ -13,13 +13,13 @@ import type { Node } from "@xyflow/react";
 import {
   nodes as initialNodes,
   edges as initialEdges,
-} from "./ReactflowOverviewApp/initial-elements";
-import AnnotationNode from "./ReactflowOverviewApp/AnnotationNode";
-import ResizerNode from "./ReactflowOverviewApp/ResizerNode";
-import CircleNode from "./ReactflowOverviewApp/CircleNode";
-import TextNode from "./ReactflowOverviewApp/TextNode";
-import ButtonEdge from "./ReactflowOverviewApp/ButtonEdge";
-import ToolBarNode from "./ReactflowOverviewApp/ToolBarNode";
+} from "./initial-elements";
+import AnnotationNode from "./AnnotationNode";
+import ResizerNode from "./ResizerNode";
+import CircleNode from "./CircleNode";
+import TextNode from "./TextNode";
+import ButtonEdge from "./ButtonEdge";
+import ToolBarNode from "./ToolBarNode";
 
 import "@xyflow/react/dist/style.css";
 import "./overview.less";
