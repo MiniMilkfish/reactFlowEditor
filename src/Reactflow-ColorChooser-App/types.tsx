@@ -16,7 +16,7 @@ export interface AppState {
   onConnect: OnConnect;
   setNodes: (nodes: AppNode[]) => void;
   setEdges: (edges: AppEdge[]) => void;
-  // updateNodeColor: (nodeId: string, color: string) => void;
+  updateNodeColor: (nodeId: string, color: string) => void;
 }
 
 /**

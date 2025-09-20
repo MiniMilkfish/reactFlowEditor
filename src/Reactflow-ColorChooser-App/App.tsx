@@ -5,6 +5,8 @@ import "@xyflow/react/dist/style.css";
 
 import type { AppState } from "./types";
 
+import ColorChooserNode from "./ColorChooseNode"; // 引入自定义组件
+
 const nodeClassName = (node: any) => node.type;
 
 const selector = (state: AppState) => ({
@@ -16,6 +18,8 @@ const selector = (state: AppState) => ({
   setNodes: state.setNodes,
   setEdges: state.setEdges,
 });
+
+const nodeTypes = { colorChooser: ColorChooserNode };
 
 const App = () => {
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect } = useStore(
@@ -30,7 +34,9 @@ const App = () => {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        nodeTypes={nodeTypes}
         fitView
+        proOptions={{ hideAttribution: true }}
       >
         <MiniMap zoomable pannable nodeClassName={nodeClassName} />
         <Controls />

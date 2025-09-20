@@ -3,7 +3,11 @@ import { addEdge, applyNodeChanges, applyEdgeChanges } from "@xyflow/react";
 
 import initialNodes from "./nodes";
 import initialEdges from "./edges";
-import type { AppState } from "./types";
+import type { AppState, AppNode, ColorNode } from "./types";
+
+function isColorChooserNode(node: AppNode): node is ColorNode {
+  return node.type === "colorChooser";
+}
 
 // 这是我们的 useStore hook，我们可以在我们的组件中使用它来获取 store 并调用动作
 const useStore = create<AppState>((set, get) => ({
@@ -29,6 +33,16 @@ const useStore = create<AppState>((set, get) => ({
   },
   setEdges: (edges) => {
     set({ edges });
+  },
+  updateNodeColor: (nodeId, color) => {
+    set({
+      nodes: get().nodes.map((node) => {
+        if (node.id === nodeId && isColorChooserNode(node)) {
+          return { ...node, data: { ...node.data, color } };
+        }
+        return node;
+      }),
+    });
   },
 }));
 
