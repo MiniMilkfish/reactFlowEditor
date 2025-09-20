@@ -7,7 +7,7 @@ import {
 
 import type { EdgeProps } from "@xyflow/react";
 
-export default function ButtonEdge({
+export default function EdgeButton({
   id,
   sourceX,
   sourceY,

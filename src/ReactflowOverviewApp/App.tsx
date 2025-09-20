@@ -1,49 +1,25 @@
-import React, { useCallback } from "react";
-import {
-  ReactFlow,
-  addEdge,
-  MiniMap,
-  Controls,
-  Background,
-  useNodesState,
-  useEdgesState,
-} from "@xyflow/react";
-
-import {
-  nodes as initialNodes,
-  edges as initialEdges,
-} from "./initial-elements";
-import AnnotationNode from "./AnnotationNode";
-import ResizerNode from "./ResizerNode";
-import CircleNode from "./CircleNode";
-import TextNode from "./TextNode";
-import ButtonEdge from "./ButtonEdge";
-import ToolBarNode from "./ToolBarNode";
+import { ReactFlow, MiniMap, Controls, Background } from "@xyflow/react";
+import { useShallow } from "zustand/react/shallow";
 
 import "@xyflow/react/dist/style.css";
 import "./overview.less";
 
-const nodeTypes = {
-  annotation: AnnotationNode,
-  tools: ToolBarNode,
-  resizer: ResizerNode,
-  circle: CircleNode,
-  textinput: TextNode,
-};
-
-const edgeTypes = {
-  button: ButtonEdge,
-};
+import { nodeTypes, edgeTypes, type AppState } from "./types";
+import useStore from "./store";
 
 const nodeClassName = (node: any) => node.type;
 
-const App = () => {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+const selector = (state: AppState) => ({
+  nodes: state.nodes,
+  edges: state.edges,
+  onNodesChange: state.onNodesChange,
+  onEdgesChange: state.onEdgesChange,
+  onConnect: state.onConnect,
+});
 
-  const onConnect = useCallback(
-    (params: any) => setEdges((eds) => addEdge(params, eds)),
-    [],
+const App = () => {
+  const { nodes, edges, onNodesChange, onEdgesChange, onConnect } = useStore(
+    useShallow(selector),
   );
 
   return (

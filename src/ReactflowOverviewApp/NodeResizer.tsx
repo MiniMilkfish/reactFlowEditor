@@ -1,11 +1,10 @@
 import React, { memo } from "react";
-import { Handle, Position, NodeResizer } from "@xyflow/react";
+import { Handle, Position, NodeResizer as _NodeResizer } from "@xyflow/react";
 
-function TextNode({ data }: { data: { label: string } }) {
-  console.log("TextNode", data);
+function NodeResizer({ data }: { data: { label: string; txt: string } }) {
   return (
     <>
-      <NodeResizer minWidth={50} minHeight={50} />
+      <_NodeResizer minWidth={50} minHeight={50} />
       <Handle type="target" position={Position.Left} />
       <div style={{ padding: 10 }}>{data.label}</div>
       <div
@@ -35,4 +34,4 @@ function TextNode({ data }: { data: { label: string } }) {
   );
 }
 
-export default memo(TextNode);
+export default memo(NodeResizer);

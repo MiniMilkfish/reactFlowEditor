@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 
-function AnnotationNode({
+function NodeAnnotation({
   data,
 }: {
   data: { level: number; label: string; arrowStyle?: React.CSSProperties };
@@ -20,4 +20,4 @@ function AnnotationNode({
   );
 }
 
-export default memo(AnnotationNode);
+export default memo(NodeAnnotation);

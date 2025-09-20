@@ -1,16 +1,16 @@
 import React, { memo, useState } from "react";
-import { Handle, Position, NodeToolbar } from "@xyflow/react";
+import { Handle, Position, NodeToolbar as _NodeToolbar } from "@xyflow/react";
 
-function ToolbarNode({ data }: { data: { label: string } }) {
+function NodeToolbar({ data }: { data: { label: string } }) {
   const [emoji, setEmoji] = useState(() => "🚀");
 
   return (
     <>
-      <NodeToolbar isVisible>
+      <_NodeToolbar isVisible>
         <button onClick={() => setEmoji("🚀")}>🚀</button>
         <button onClick={() => setEmoji("🔥")}>🔥</button>
         <button onClick={() => setEmoji("✨")}>✨</button>
-      </NodeToolbar>
+      </_NodeToolbar>
       <div style={{ padding: "10px 20px" }}>
         <div>{emoji}</div>
       </div>
@@ -31,4 +31,4 @@ function ToolbarNode({ data }: { data: { label: string } }) {
   );
 }
 
-export default memo(ToolbarNode);
+export default memo(NodeToolbar);

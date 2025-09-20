@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { Handle, Position, useStore, type NodeProps } from "@xyflow/react";
 
-export default memo(({ id, data, ...props }: NodeProps) => {
+function NodeCircle({ id, data, ...props }: NodeProps) {
   const label = useStore((state) => {
     const node = state.nodes.find((n) => n.id === id);
 
@@ -26,4 +26,5 @@ export default memo(({ id, data, ...props }: NodeProps) => {
       <Handle type="source" position={Position.Right} />
     </>
   );
-});
+}
+export default memo(NodeCircle);
