@@ -8,7 +8,6 @@ import {
   useNodesState,
   useEdgesState,
 } from "@xyflow/react";
-import type { Node } from "@xyflow/react";
 
 import {
   nodes as initialNodes,
@@ -38,7 +37,7 @@ const edgeTypes = {
 
 const nodeClassName = (node: any) => node.type;
 
-const OverviewFlow = () => {
+const App = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
@@ -69,7 +68,4 @@ const OverviewFlow = () => {
   );
 };
 
-export type AppNode = Node;
-export default function App() {
-  return <OverviewFlow />;
-}
+export default App;

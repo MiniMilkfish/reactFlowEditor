@@ -1,14 +1,7 @@
-import React, { memo } from "react";
-import { Handle, Position, type NodeProps } from "@xyflow/react";
-import useStore from "../store";
+import { memo } from "react";
+import { Handle, Position, useStore, type NodeProps } from "@xyflow/react";
 
 export default memo(({ id, data, ...props }: NodeProps) => {
-  console.log("CircleNode - id:", id, "data:", data, "all props:", {
-    id,
-    data,
-    ...props,
-  });
-
   const label = useStore((state) => {
     const node = state.nodes.find((n) => n.id === id);
 
