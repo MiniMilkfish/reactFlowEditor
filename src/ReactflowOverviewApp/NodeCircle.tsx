@@ -1,25 +1,18 @@
 import { memo } from "react";
 import { Handle, Position, useStore, type NodeProps } from "@xyflow/react";
+// import { constants } from "buffer";
 
 function NodeCircle({ id, data, ...props }: NodeProps) {
-  const label = useStore((state) => {
-    const node = state.nodes.find((n) => n.id === id);
-
-    if (!node) {
-      return null;
-    }
-
-    return `position x:${Math.round(node.position.x)}, y:${Math.round(
-      node.position.y,
-    )}`;
-  });
+  const { positionAbsoluteX, positionAbsoluteY } = props;
 
   return (
     <>
       <div className="wrapper gradient">
         <div className="inner">
-          <div>{label || "no node connected"}</div>
-          {data && <div>Data: {JSON.stringify(data)}</div>}
+          <div>
+            {id} x:{Math.round(positionAbsoluteX)}, y:
+            {Math.round(positionAbsoluteY)}
+          </div>
         </div>
       </div>
       <Handle type="target" position={Position.Left} />

@@ -128,6 +128,24 @@ export const nodes = [
     id: "3-1",
     type: "circle",
     position: { x: 350, y: 500 },
-    data: {},
+    data: {
+      lebel: "3-1",
+    },
+  },
+  {
+    id: "3-3",
+    type: "circle",
+    position: { x: 410, y: 310 },
+    data: {
+      label: "3-3",
+    },
+  },
+  {
+    id: "3-4",
+    type: "circle",
+    position: { x: 140, y: 110 },
+    data: {
+      label: "3-4",
+    },
   },
 ] as AppNode[];

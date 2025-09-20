@@ -30,6 +30,7 @@ function NodeResizer({ data }: { data: { label: string; txt: string } }) {
           position={Position.Bottom}
         />
       </div>
+      <Handle id="c" type="source" position={Position.Right} />
     </>
   );
 }

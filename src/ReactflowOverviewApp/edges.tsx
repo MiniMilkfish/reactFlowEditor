@@ -57,4 +57,12 @@ export const edges = [
     type: "button",
     style: { strokeWidth: 2 },
   },
+  {
+    id: "e3-5",
+    source: "2-3",
+    sourceHandle: "c",
+    target: "3-3",
+    type: "button",
+    style: { strokeWidth: 2 },
+  },
 ] as AppEdge[];

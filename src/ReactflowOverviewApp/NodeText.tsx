@@ -2,7 +2,6 @@ import React, { memo } from "react";
 import { Handle, Position, NodeResizer } from "@xyflow/react";
 
 function NodeText({ data }: { data: { label: string } }) {
-  console.log("NodeText", data);
   return (
     <>
       <NodeResizer minWidth={50} minHeight={50} />
