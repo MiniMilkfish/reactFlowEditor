@@ -5,7 +5,6 @@ import type { ColorNode } from "./types";
 
 function ColorChooserNode({ id, data }: NodeProps<ColorNode>) {
   const updateNodeColor = userStore((state) => state.updateNodeColor);
-  console.log("ColorChooserNode", id, data);
 
   return (
     <div style={{ backgroundColor: data.color, borderRadius: 10 }}>
