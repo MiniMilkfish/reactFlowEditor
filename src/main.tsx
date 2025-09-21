@@ -15,7 +15,10 @@ import ReactflowOverviewWithoutZustandApp from "./ReactflowOverviewApp_WithoutZu
 // zundo 官方示例
 import ZundoOfficeDemoApp from "./ZundoOfficeDemoApp/App.tsx";
 
-const App = ZundoOfficeDemoApp;
+// reactflow-undo-redo
+import ReactflowUndoRedoApp from "./ReactflowUndoRedoApp/App.tsx";
+
+const App = ReactflowUndoRedoApp;
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
