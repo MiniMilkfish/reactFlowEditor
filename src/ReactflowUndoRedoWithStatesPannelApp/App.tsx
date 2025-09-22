@@ -33,6 +33,8 @@ const selector = (state: AppState) => ({
   record: state.record,
 });
 
+let isDraggingFirstSlice = true;
+
 const App = () => {
   // Reactflow 钩子函数
   const { updateEdge, toObject, addNodes, addEdges } = useReactFlow();
@@ -109,13 +111,19 @@ const App = () => {
           changes.forEach((change) => {
             if (change.type === "position") {
               if (!change.dragging) {
-                // DragEnd 时记录当前状态到历史
-                record(() => {
-                  onNodesChange([change]);
-                });
-              } else {
-                // 拖拽过程中直接更新，不记录历史
                 onNodesChange([change]);
+                isDraggingFirstSlice = true;
+              } else {
+                if (isDraggingFirstSlice) {
+                  record(() => {
+                    onNodesChange([change]);
+                    isDraggingFirstSlice = false;
+                  });
+                  isDraggingFirstSlice = false;
+                } else {
+                  onNodesChange([change]);
+                  isDraggingFirstSlice = false;
+                }
               }
             } else if (immediateRecordTypes.has(change.type)) {
               // 对add、remove类型立即记录到历史
