@@ -16,4 +16,5 @@ export interface AppState {
   onConnect: OnConnect;
   setNodes: (nodes: AppNode[]) => void;
   setEdges: (edges: AppEdge[]) => void;
+  record: (callback: () => void) => void;
 }

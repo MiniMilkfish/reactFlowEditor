@@ -13,10 +13,6 @@ export const nodes = [
     type: "default",
     data: { label: "default" },
     position: { x: 0, y: 0 },
-    // handles: [
-    //   { id: 'a', type: 'target', position: Position.Right },
-    //   { id: 'b', type: 'source', position: Position.Left },
-    // ]
   },
   {
     id: "3",

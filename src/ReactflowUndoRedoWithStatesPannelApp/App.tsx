@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect } from "react";
 import {
   Background,
   ConnectionLineType,
@@ -6,7 +6,7 @@ import {
   Panel,
   ReactFlow,
   ReactFlowProvider,
-  //   useNodesInitialized,
+  MiniMap,
   useReactFlow,
 } from "@xyflow/react";
 import { customAlphabet } from "nanoid";
@@ -14,45 +14,34 @@ import { customAlphabet } from "nanoid";
 import { useShallow } from "zustand/react/shallow";
 
 import "@xyflow/react/dist/style.css";
-import { Button, Flex } from "antd";
+import { Button, Flex, Input, Typography } from "antd";
+const { Title, Paragraph } = Typography;
+const { TextArea } = Input;
 
-import useStore, { useUndoRedo } from "./store";
+import useStore, { useTemporalStore } from "./store";
+import type { AppState } from "./types";
+const nodeClassName = (node: any) => node.type;
 
 const uuid = customAlphabet("0123456789abcdefghijklmnopqrstuvwxyz", 16); //=> "4f90d13a42"
 
-const UndoRedoFlow = () => {
-  //   const nodesInitialized = useNodesInitialized();
-  const { fitView, updateEdge, toObject, addNodes, addEdges } = useReactFlow();
+const selector = (state: AppState) => ({
+  nodes: state.nodes,
+  edges: state.edges,
+  onNodesChange: state.onNodesChange,
+  onEdgesChange: state.onEdgesChange,
+  onConnect: state.onConnect,
+  record: state.record,
+});
 
-  // 用于存储拖拽开始时的节点位置
-  const dragStartPositions = React.useRef<
-    Record<string, { x: number; y: number }>
-  >({});
+const App = () => {
+  // Reactflow 钩子函数
+  const { updateEdge, toObject, addNodes, addEdges } = useReactFlow();
+  const { nodes, edges, onNodesChange, onEdgesChange, onConnect, record } =
+    useStore(useShallow(selector));
 
-  // 防抖函数用于position记录
-  const debounceTimers = React.useRef<Record<string, NodeJS.Timeout>>({});
-
-  const {
-    nodes,
-    edges,
-    onNodesChange,
-    onEdgesChange,
-    onConnect,
-    setNodes,
-    setEdges,
-  } = useStore(
-    useShallow((state) => ({
-      nodes: state.nodes,
-      edges: state.edges,
-      setNodes: state.setNodes,
-      setEdges: state.setEdges,
-      onNodesChange: state.onNodesChange,
-      onEdgesChange: state.onEdgesChange,
-      onConnect: state.onConnect,
-    })),
+  const { undo, redo, futureStates, pastStates } = useTemporalStore(
+    (state) => state,
   );
-
-  const { undo, redo, record } = useUndoRedo();
 
   // 添加节点元素
   const handleAddNode = () => {
@@ -102,6 +91,12 @@ const UndoRedoFlow = () => {
     });
   };
 
+  useEffect(() => {
+    // 初始化 - 设置初始状态但不记录到历史
+    // - 空操作，只是为了初始化记录器
+    record(() => {});
+  }, [record]);
+
   return (
     <div className="h-screen w-screen rounded-xl bg-gray-50">
       <ReactFlow
@@ -109,19 +104,21 @@ const UndoRedoFlow = () => {
         edges={edges}
         onNodesChange={(changes) => {
           const immediateRecordTypes = new Set(["add", "remove", "position"]);
+
+          // 完整的拖拽过程（鼠标点击-开始拖拽-拖拽-鼠标弹起-拖拽结束）里只需要记录拖拽的开始和结束
           changes.forEach((change) => {
             if (change.type === "position") {
-              // 立即更新UI
-              onNodesChange([change]);
-
               if (!change.dragging) {
-                // DragEnd 记录当前状态到历史
+                // DragEnd 时记录当前状态到历史
                 record(() => {
-                  // onNodesChange([change])
+                  onNodesChange([change]);
                 });
+              } else {
+                // 拖拽过程中直接更新，不记录历史
+                onNodesChange([change]);
               }
             } else if (immediateRecordTypes.has(change.type)) {
-              // 对add、remove类型立即记录
+              // 对add、remove类型立即记录到历史
               record(() => {
                 onNodesChange([change]);
               });
@@ -157,18 +154,34 @@ const UndoRedoFlow = () => {
         proOptions={{ hideAttribution: true }}
         fitView
       >
+        <MiniMap
+          zoomable
+          pannable
+          nodeClassName={nodeClassName}
+          position="bottom-right"
+        />
+        <Controls orientation="vertical" position="center-right" />
         <Background />
         <Panel position="top-right">
           <Flex gap="small" wrap>
-            <Button color="danger" variant="solid" onClick={() => undo()}>
-              撤销
+            <Button
+              color="danger"
+              variant="solid"
+              disabled={pastStates.length === 0}
+              onClick={() => undo()}
+            >
+              ↶ 撤销 ({pastStates.length})
             </Button>
-            <Button type="dashed" danger onClick={() => redo()}>
-              重做
+            <Button
+              type="dashed"
+              danger
+              disabled={futureStates.length === 0}
+              onClick={() => redo()}
+            >
+              ↷ 重做 ({futureStates.length})
             </Button>
           </Flex>
         </Panel>
-        <Controls orientation="horizontal" position="top-left" />
         <Panel position="bottom-left">
           <Button
             onClick={() => {
@@ -178,13 +191,41 @@ const UndoRedoFlow = () => {
             打印数据
           </Button>
         </Panel>
-        <Panel position="bottom-right">
+        <Panel position="top-left">
           <Flex gap="small" wrap>
             <Button type="primary" onClick={handleAddNode.bind(this)}>
               添加元素
             </Button>
             <Button onClick={handleInsertNode}>插入元素</Button>
           </Flex>
+        </Panel>
+        <Panel position="center-left">
+          <Title level={3}>过去状态</Title>
+          <Paragraph>
+            <TextArea
+              value={JSON.stringify(pastStates, null, 2)}
+              rows={4}
+              showCount
+            />
+          </Paragraph>
+
+          <Title level={3}>当前完整状态</Title>
+          <Paragraph>
+            <TextArea
+              value={JSON.stringify({ nodes, edges }, null, 2)}
+              rows={4}
+              showCount
+            />
+          </Paragraph>
+
+          <Title level={3}>未来状态:</Title>
+          <Paragraph>
+            <TextArea
+              value={JSON.stringify(futureStates, null, 2)}
+              rows={4}
+              showCount
+            />
+          </Paragraph>
         </Panel>
       </ReactFlow>
     </div>
@@ -194,7 +235,7 @@ const UndoRedoFlow = () => {
 export default () => {
   return (
     <ReactFlowProvider>
-      <UndoRedoFlow />
+      <App />
     </ReactFlowProvider>
   );
 };
