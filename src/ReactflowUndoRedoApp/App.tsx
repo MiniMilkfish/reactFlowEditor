@@ -54,29 +54,29 @@ const UndoRedoFlow = () => {
 
   const { undo, redo, record } = useUndoRedo();
 
-  // 防抖记录函数，用于position类型的变化
-  const debouncedPositionRecord = React.useCallback(
-    (change: any) => {
-      const nodeId = change.id;
+  // // 防抖记录函数，用于position类型的变化
+  // const debouncedPositionRecord = React.useCallback(
+  //   (change: any) => {
+  //     const nodeId = change.id;
 
-      // 立即更新UI
-      onNodesChange([change]);
+  //     // 立即更新UI
+  //     onNodesChange([change]);
 
-      // 清除之前的定时器
-      if (debounceTimers.current[nodeId]) {
-        clearTimeout(debounceTimers.current[nodeId]);
-      }
+  //     // 清除之前的定时器
+  //     if (debounceTimers.current[nodeId]) {
+  //       clearTimeout(debounceTimers.current[nodeId]);
+  //     }
 
-      // 设置新的定时器，500ms后执行记录（防抖延迟稍长一些）
-      debounceTimers.current[nodeId] = setTimeout(() => {
-        record(() => {
-          // 防抖记录：只在用户停止拖拽后记录最终状态
-        });
-        delete debounceTimers.current[nodeId];
-      }, 500);
-    },
-    [record, onNodesChange],
-  );
+  //     // 设置新的定时器，500ms后执行记录（防抖延迟稍长一些）
+  //     debounceTimers.current[nodeId] = setTimeout(() => {
+  //       record(() => {
+  //         // 防抖记录：只在用户停止拖拽后记录最终状态
+  //       });
+  //       delete debounceTimers.current[nodeId];
+  //     }, 500);
+  //   },
+  //   [record, onNodesChange],
+  // );
 
   // 添加节点元素
   const handleAddNode = () => {
@@ -132,12 +132,13 @@ const UndoRedoFlow = () => {
         nodes={nodes}
         edges={edges}
         onNodesChange={(changes) => {
-          const immediateRecordTypes = new Set(["add", "remove"]);
+          const immediateRecordTypes = new Set(["add", "remove", "position"]);
           changes.forEach((change) => {
-            if (change.type === "position") {
-              // 对position类型使用防抖记录
-              debouncedPositionRecord(change);
-            } else if (immediateRecordTypes.has(change.type)) {
+            // if (change.type === "position") {
+            //   // 对position类型使用防抖记录
+            //   debouncedPositionRecord(change);
+            // } else
+            if (immediateRecordTypes.has(change.type)) {
               // 对add、remove类型立即记录
               record(() => {
                 onNodesChange([change]);
