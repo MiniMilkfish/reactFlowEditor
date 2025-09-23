@@ -4,6 +4,7 @@ import type {
   OnConnect,
   OnNodesChange,
   OnEdgesChange,
+  OnDelete,
 } from "@xyflow/react";
 
 export type AppNode = Node;
@@ -17,4 +18,5 @@ export interface AppState {
   setNodes: (nodes: AppNode[]) => void;
   setEdges: (edges: AppEdge[]) => void;
   record: (callback: () => void) => void;
+  onDelete: OnDelete<AppNode, AppEdge>;
 }

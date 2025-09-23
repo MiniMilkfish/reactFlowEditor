@@ -39,6 +39,12 @@ const useStore = create(
         setEdges: (edges) => {
           set({ edges });
         },
+        onDelete: ({ nodes, edges }) => {
+          set({
+            nodes: nodes.filter((node) => !nodes.includes(node)),
+            edges: edges.filter((edge) => !edges.includes(edge)),
+          });
+        },
         record: (callback: () => void) => {
           const temporalStore = useStore.temporal.getState();
 

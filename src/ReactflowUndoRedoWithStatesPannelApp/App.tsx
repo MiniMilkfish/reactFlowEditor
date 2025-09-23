@@ -19,7 +19,7 @@ const { Title, Paragraph } = Typography;
 const { TextArea } = Input;
 
 import useStore, { useTemporalStore } from "./store";
-import type { AppState } from "./types";
+import type { AppState, AppNode, AppEdge } from "./types";
 const nodeClassName = (node: any) => node.type;
 
 const uuid = customAlphabet("0123456789abcdefghijklmnopqrstuvwxyz", 16); //=> "4f90d13a42"
@@ -31,6 +31,7 @@ const selector = (state: AppState) => ({
   onEdgesChange: state.onEdgesChange,
   onConnect: state.onConnect,
   record: state.record,
+  onDelete: state.onDelete,
 });
 
 let isDraggingFirstSlice = true;
@@ -38,8 +39,15 @@ let isDraggingFirstSlice = true;
 const App = () => {
   // Reactflow 钩子函数
   const { updateEdge, toObject, addNodes, addEdges } = useReactFlow();
-  const { nodes, edges, onNodesChange, onEdgesChange, onConnect, record } =
-    useStore(useShallow(selector));
+  const {
+    nodes,
+    edges,
+    onNodesChange,
+    onEdgesChange,
+    onConnect,
+    record,
+    onDelete,
+  } = useStore(useShallow(selector));
 
   const { undo, redo, futureStates, pastStates } = useTemporalStore(
     (state) => state,
@@ -104,33 +112,77 @@ const App = () => {
       <ReactFlow
         nodes={nodes}
         edges={edges}
+        // debug={true}
+        // snapGrid={true}
+        snapToGrid={true}
+        snapGrid={[5, 5]}
+        // alignLine={{
+        //   enable: true,
+        //   stroke: 'red',
+        //   strokeWidth: 1
+        // }}
+        connectionLineType={ConnectionLineType.SmoothStep}
+        onDelete={(changes) => {
+          console.log("onDelete: ", changes);
+          onDelete(changes);
+          record(() => {
+            onDelete(changes);
+          });
+        }}
+        onNodeClick={() => {
+          console.log("onNodeClick");
+        }}
+        onNodeDragStart={() => {
+          console.log("onNodeDragStart");
+        }}
+        onNodeDragStop={() => {
+          console.log("onNodeDragStop");
+        }}
+        onNodesDelete={() => {
+          console.log("onNodesDelete");
+        }}
+        onNodeMouseMove={() => {
+          console.log("onNodeMouseMove");
+        }}
+        onNodeMouseLeave={() => {
+          console.log("onNodeMouseLeave");
+        }}
+        onNodeDrag={() => {
+          console.log("onNodeDrag");
+        }}
         onNodesChange={(changes) => {
-          const immediateRecordTypes = new Set(["add", "remove", "position"]);
+          console.log("onNodesChange", changes);
+          const immediateRecordTypes = new Set(["add", "position"]);
 
           // 完整的拖拽过程（鼠标点击-开始拖拽-拖拽-鼠标弹起-拖拽结束）里只需要记录拖拽的开始和结束
           changes.forEach((change) => {
             if (change.type === "position") {
               if (!change.dragging) {
+                console.log(1, change);
                 onNodesChange([change]);
                 isDraggingFirstSlice = true;
               } else {
                 if (isDraggingFirstSlice) {
+                  console.log(2);
                   record(() => {
                     onNodesChange([change]);
                     isDraggingFirstSlice = false;
                   });
                   isDraggingFirstSlice = false;
                 } else {
+                  console.log(3);
                   onNodesChange([change]);
                   isDraggingFirstSlice = false;
                 }
               }
             } else if (immediateRecordTypes.has(change.type)) {
+              console.log(4);
               // 对add、remove类型立即记录到历史
               record(() => {
                 onNodesChange([change]);
               });
             } else {
+              console.log(5);
               // 其他类型直接更新，不记录历史
               onNodesChange([change]);
             }
