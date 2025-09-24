@@ -7,6 +7,12 @@ import type {
   OnDelete,
 } from "@xyflow/react";
 
+import NodeCanvas from "./NodeCanvas";
+
+export const nodeTypes = {
+  nodeCanvas: NodeCanvas,
+};
+
 export type AppNode = Node;
 export type AppEdge = Edge;
 export interface AppState {

@@ -14,12 +14,12 @@ import { customAlphabet } from "nanoid";
 import { useShallow } from "zustand/react/shallow";
 
 import "@xyflow/react/dist/style.css";
-import { Button, Flex, Input, Typography } from "antd";
+import { Button, Flex, Input, Space, Typography } from "antd";
 const { Title, Paragraph } = Typography;
 const { TextArea } = Input;
 
 import useStore, { useTemporalStore } from "./store";
-import type { AppState, AppNode, AppEdge } from "./types";
+import { type AppState, type AppNode, type AppEdge, nodeTypes } from "./types";
 const nodeClassName = (node: any) => node.type;
 
 const uuid = customAlphabet("0123456789abcdefghijklmnopqrstuvwxyz", 16); //=> "4f90d13a42"
@@ -101,6 +101,23 @@ const App = () => {
     });
   };
 
+  // 添加Canvas 节点
+  const handleAddCanvasNode = () => {
+    const nodeId = uuid();
+    const newNode = {
+      id: nodeId,
+      data: { label: nodeId },
+      type: "nodeCanvas",
+      position: {
+        x: 100,
+        y: 100 + parseInt(String(Math.random() * 100)),
+      },
+    };
+    record(() => {
+      addNodes(newNode);
+    });
+  };
+
   useEffect(() => {
     // 初始化 - 设置初始状态但不记录到历史
     // - 空操作，只是为了初始化记录器
@@ -116,6 +133,7 @@ const App = () => {
         // snapGrid={true}
         snapToGrid={true}
         snapGrid={[5, 5]}
+        nodeTypes={nodeTypes}
         // alignLine={{
         //   enable: true,
         //   stroke: 'red',
@@ -124,10 +142,10 @@ const App = () => {
         connectionLineType={ConnectionLineType.SmoothStep}
         onDelete={(changes) => {
           console.log("onDelete: ", changes);
-          onDelete(changes);
-          record(() => {
-            onDelete(changes);
-          });
+          // onDelete(changes);
+          // record(() => {
+          //   onDelete(changes);
+          // });
         }}
         onNodeClick={() => {
           console.log("onNodeClick");
@@ -257,6 +275,10 @@ const App = () => {
               添加元素
             </Button>
             <Button onClick={handleInsertNode}>插入元素</Button>
+            <Space />
+            <Button danger onClick={handleAddCanvasNode}>
+              添加 CANVAS 节点
+            </Button>
           </Flex>
         </Panel>
         <Panel position="center-left">
