@@ -1,20 +1,16 @@
 import { create } from "zustand";
-import { immer } from "zustand/middleware/immer"; // 依赖 immer 库，引入之前请先安装 immer
+import { immer } from "zustand/middleware/immer";
 import { applyNodeChanges, applyEdgeChanges, addEdge } from "@xyflow/react";
-import { temporal, type TemporalState } from "zundo";
-import { useStoreWithEqualityFn } from "zustand/traditional"; // replace 'useStore'
-import type { AppState, AppNode } from "./types";
+import { temporal } from "zundo";
+import type { AppState } from "./types";
 
 // 初始化 Nodes、Edges
 import { nodes as initialNodes } from "./nodes";
 import { edges as initialEdges } from "./edges";
 
-// 添加一个标志来跟踪是否已经初始化
-let isInitialized = false;
-
-const useStore = create(
+const useStore = create<AppState>()(
   immer(
-    temporal<AppState>(
+    temporal(
       (set, get) => ({
         nodes: initialNodes,
         edges: initialEdges,
@@ -39,47 +35,47 @@ const useStore = create(
         setEdges: (edges) => {
           set({ edges });
         },
-        onDelete: ({ nodes, edges }) => {
-          set({
-            nodes: nodes.filter((node) => !nodes.includes(node)),
-            edges: edges.filter((edge) => !edges.includes(edge)),
-          });
-        },
         record: (callback: () => void) => {
+          console.log("record 开始记录");
           const temporalStore = useStore.temporal.getState();
-
-          // 如果是首次调用，暂停跟踪并清空历史
-          if (!isInitialized) {
-            temporalStore.pause();
-            temporalStore.clear();
-            isInitialized = true;
-          }
-
-          const wasTracking = temporalStore.isTracking;
-
-          // 如果当前没有在跟踪，则开始跟踪
-          if (!wasTracking) {
-            temporalStore.resume();
-          }
-
+          temporalStore.resume();
           callback();
-
-          // 如果原来没有在跟踪，则暂停跟踪
-          if (!wasTracking) {
-            temporalStore.pause();
-          }
+          temporalStore.pause();
+        },
+        initializeHistory: () => {
+          const temporalStore = useStore.temporal.getState();
+          temporalStore.clear();
+          temporalStore.pause();
         },
       }),
       {
-        // partialize: () => { },   // TODO: 排除不需要被记录的字段，避免内存占用过高
-        limit: 10, // 限制历史状态数量，避免内存占用过高
+        partialize: (state) => ({
+          nodes: state.nodes,
+          edges: state.edges,
+        }),
+        limit: 10,
       },
     ),
   ),
 );
+
 export default useStore;
 
-export const useTemporalStore = <T extends unknown>(
-  selector: (state: TemporalState<AppState>) => T,
-  equality?: (a: T, b: T) => boolean,
-) => useStoreWithEqualityFn(useStore.temporal, selector!, equality);
+// 导出撤销重做钩子
+export const useUndoRedo = () => {
+  const temporalStore = useStore.temporal.getState();
+
+  // 默认暂停跟踪
+  if (temporalStore.isTracking) {
+    temporalStore.pause();
+  }
+
+  return {
+    ...temporalStore,
+    record: (callback: () => void) => {
+      temporalStore.resume();
+      callback();
+      temporalStore.pause();
+    },
+  };
+};

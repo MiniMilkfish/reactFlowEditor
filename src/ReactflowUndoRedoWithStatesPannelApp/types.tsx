@@ -24,5 +24,10 @@ export interface AppState {
   setNodes: (nodes: AppNode[]) => void;
   setEdges: (edges: AppEdge[]) => void;
   record: (callback: () => void) => void;
-  onDelete: OnDelete<AppNode, AppEdge>;
+  initializeHistory: () => void;
+}
+
+export interface EditorState {
+  nodes: AppNode[];
+  edges: AppEdge[];
 }

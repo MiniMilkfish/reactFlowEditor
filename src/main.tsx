@@ -25,7 +25,7 @@ import ReactflowUndoRedoWithStatesPannelApp from "./ReactflowUndoRedoWithStatesP
 // reactflow-event-text
 import ReactflowEventEmitDemoApp from "./ReactflowEventEmitDemo/App.tsx";
 
-const App = ReactflowEventEmitDemoApp;
+const App = ReactflowUndoRedoWithStatesPannelApp;
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
