@@ -54,6 +54,9 @@ const useStore = create<AppState>()(
           edges: state.edges,
         }),
         limit: 10,
+        onSave: () => {
+          return true;
+        },
       },
     ),
   ),
@@ -70,12 +73,5 @@ export const useUndoRedo = () => {
     temporalStore.pause();
   }
 
-  return {
-    ...temporalStore,
-    record: (callback: () => void) => {
-      temporalStore.resume();
-      callback();
-      temporalStore.pause();
-    },
-  };
+  return temporalStore;
 };

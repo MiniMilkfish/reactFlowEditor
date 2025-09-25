@@ -137,7 +137,15 @@ const App = () => {
     });
   };
 
-  // onDelete 事件 - 统一处理删除操作
+  /**
+   * 统一删除事件
+   * 原则：
+   * 1. 节点删除时，无需手动删除关联的边，reactflow 会自动帮你处理（这是 reactflow 的默认行为）
+   * 2. 边删除时，不影响关联的节点
+   * @description 处理 ReactFlow 中的节点和边的删除操作
+   * @param {OnDeleteParams<AppNode, AppEdge>} params - 包含要删除的节点和边的参数
+   * @returns {boolean} - 返回 false 以阻止默认删除行为
+   * */
   const handleOnDelete: OnDelete<AppNode, AppEdge> = useCallback(
     (params) => {
       const { nodes: nodesToDelete, edges: edgesToDelete } = params;
@@ -148,26 +156,30 @@ const App = () => {
         edgesToDelete,
       );
 
-      record(() => {
-        // 手动删除节点和边
-        if (nodesToDelete && nodesToDelete.length > 0) {
-          console.log("删除节点:", nodesToDelete);
-          setNodes(
-            nodes.filter(
-              (node) => !nodesToDelete.find((n) => n.id === node.id),
-            ),
-          );
-        }
-
-        if (edgesToDelete && edgesToDelete.length > 0) {
-          console.log("删除边:", edgesToDelete);
+      if (
+        nodesToDelete &&
+        nodesToDelete.length === 0 &&
+        edgesToDelete &&
+        edgesToDelete.length > 0
+      ) {
+        // 边
+        record(() => {
           setEdges(
             edges.filter(
               (edge) => !edgesToDelete.find((e) => e.id === edge.id),
             ),
           );
-        }
-      });
+        });
+      } else {
+        // 节点 / 节点 + 边
+        record(() => {
+          setNodes(
+            nodes.filter(
+              (node) => !nodesToDelete.find((n) => n.id === node.id),
+            ),
+          );
+        });
+      }
 
       // 阻止默认删除行为，避免触发其他事件
       return false;
