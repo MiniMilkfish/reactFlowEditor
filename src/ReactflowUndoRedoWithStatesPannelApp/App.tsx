@@ -83,13 +83,12 @@ const App = () => {
       },
     };
     record(() => {
-      // todo 节点和线插入 合并为一个操作
-      addNodes(newNode);
-      addEdges({
-        id: edgeID,
-        source: "1",
-        target: newNode.id,
-      });
+      setNodes([...nodes, newNode]);
+    });
+    addEdges({
+      id: edgeID,
+      source: "1",
+      target: newNode.id,
     });
   };
 
@@ -106,17 +105,17 @@ const App = () => {
       },
     };
     record(() => {
-      // todo 节点和线插入 合并为一个操作
-      addNodes(newNode);
-      addEdges({
-        id: edgeID,
-        source: "2",
-        target: newNode.id,
-      });
-      const targetEdge = edges.find((edge) => edge.source === "2");
-      updateEdge(targetEdge?.id as string, {
-        source: newNode.id,
-      });
+      setNodes([...nodes, newNode]);
+    });
+    addEdges({
+      id: edgeID,
+      source: "2",
+      target: newNode.id,
+    });
+
+    const targetEdge = edges.find((edge) => edge.source === "2");
+    updateEdge(targetEdge?.id as string, {
+      source: newNode.id,
     });
   };
 
@@ -133,7 +132,7 @@ const App = () => {
       },
     };
     record(() => {
-      addNodes(newNode);
+      setNodes([...nodes, newNode]);
     });
   };
 
@@ -191,7 +190,9 @@ const App = () => {
     (changes: NodeChange[]) => {
       // change.type
       // position\remove\add\replace\dimensions\select
+      const immediateRecordTypes = new Set(["add", "dimensions", "replace"]);
       changes.forEach((change) => {
+        console.log("x 节点变更:", change.type);
         if (change.type === "position") {
           if (!change.dragging) {
             onNodesChange([change]);
@@ -212,11 +213,15 @@ const App = () => {
           // isNodeDraggingFirstSlice = false;
           console.log("x 删除节点:", change);
           return;
-        } else if (change.type === "add") {
-          record(() => {
-            onNodesChange([change]);
-          });
+        } else if (immediateRecordTypes.has(change.type)) {
+          console.log(
+            "x 其他节点变更:",
+            change.type,
+            "replace\\dimensions\\select\\add",
+          );
+          // onNodesChange([change]);
         } else {
+          console.log("x 其他节点变更:", change.type, "?");
           onNodesChange([change]);
         }
       });
@@ -234,9 +239,7 @@ const App = () => {
           console.log("x 删除边:", change);
           return;
         } else if (change.type === "add") {
-          record(() => {
-            onEdgesChange([change]);
-          });
+          onEdgesChange([change]);
         } else {
           onEdgesChange([change]);
         }
